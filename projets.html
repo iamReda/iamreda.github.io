@@ -19,7 +19,7 @@
     <section id="hero" style="background: none;">
         <div class="container-fluid">
             <nav>
-                <a href="#" class="logo order-1 order-lg-1">
+                <a href="index.html" class="logo order-1 order-lg-1">
                     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect width="32" height="11" fill="#F3F3F3" />
                         <rect opacity="0.4" x="21.3335" y="21.3334" width="10.6667" height="10.6667" fill="white" />
@@ -320,6 +320,19 @@
     </script>
     <script src="https://code.jquery.com/jquery-3.6.4.js"
         integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+
+        <script>
+            $(document).ready(function(){
+                $(window).click(function() {
+                    $('.menu').removeClass('show');
+                });
+                $('.open-menu-sm').on('click', function(e){
+                    e.stopPropagation();
+                    $('.menu').toggleClass('show');
+                    $(this).toggleClass('active')
+                });
+            });
+        </script>
 
 </body>
 
