@@ -177,7 +177,6 @@
 
         @media (prefers-reduced-motion: reduce) {
             .type {
-                width: auto !important;
                 border-right-color: transparent;
             }
         }
@@ -334,8 +333,9 @@
             const el = document.getElementById("type");
             if (!el) return;
 
+            // Force l’animation même si l’OS préfère réduire les animations.
+            // (On garde les styles CSS "prefers-reduced-motion" pour éviter certains effets visuels si besoin.)
             const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-            if (reduceMotion) return;
 
             let currentAnim = null;
 
