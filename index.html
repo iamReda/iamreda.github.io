@@ -8,6 +8,9 @@
     <meta name="description" content="Minuit Studio — Coming soon." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 
+    <link rel="preload" as="image" href="assets/background_image-900.jpg" media="(max-width: 900px)" fetchpriority="high">
+    <link rel="preload" as="image" href="assets/background_image-1672.jpg" media="(min-width: 901px)" fetchpriority="high">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Pacifico&display=swap"
@@ -34,7 +37,7 @@
             margin: 0;
             min-height: 100vh;
             background-color: #000;
-            background-image: url("assets/background.png");
+            background-image: url("assets/background_image-1672.jpg");
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -142,6 +145,12 @@
             .type {
                 width: auto !important;
                 border-right-color: transparent;
+            }
+        }
+
+        @media (max-width: 900px) {
+            body {
+                background-image: url("assets/background_image-900.jpg");
             }
         }
     </style>
