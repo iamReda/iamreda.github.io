@@ -90,6 +90,7 @@
             white-space: nowrap;
             overflow: hidden;
             width: 0px;
+            max-width: 100%;
             border-right: 2px solid rgba(255, 255, 255, 0.9);
             padding-right: 6px;
             will-change: width;
@@ -336,26 +337,52 @@
             const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
             if (reduceMotion) return;
 
-            const text = el.getAttribute("data-text") || el.textContent || "";
-            const chars = Math.max(1, [...text].length);
+            let currentAnim = null;
 
-            // Mesure la largeur finale puis anime en "steps" façon frappe clavier.
-            el.style.width = "auto";
-            const targetWidth = Math.ceil(el.scrollWidth);
-            el.style.width = "0px";
+            function runTypewriter() {
+                const text = el.getAttribute("data-text") || el.textContent || "";
+                const chars = Math.max(1, [...text].length);
 
-            el.animate(
-                [
-                    { width: "0px" },
-                    { width: `${targetWidth}px` }
-                ],
-                {
-                    duration: 1500,
-                    delay: 250,
-                    easing: `steps(${chars}, end)`,
-                    fill: "forwards"
-                }
-            );
+                currentAnim?.cancel?.();
+
+                // Mesure la largeur finale APRÈS chargement des polices (sinon mobile = largeur trop petite).
+                el.style.width = "auto";
+                const targetWidth = Math.ceil(el.scrollWidth);
+                el.style.width = "0px";
+
+                currentAnim = el.animate(
+                    [
+                        { width: "0px" },
+                        { width: `${targetWidth}px` }
+                    ],
+                    {
+                        duration: 1500,
+                        delay: 250,
+                        easing: `steps(${chars}, end)`,
+                        fill: "forwards"
+                    }
+                );
+            }
+
+            // 1) Lance immédiatement (si les polices sont déjà prêtes).
+            runTypewriter();
+
+            // 2) Relance une fois les polices réellement chargées.
+            const fontsReady = document.fonts?.ready;
+            if (fontsReady && typeof fontsReady.then === "function") {
+                fontsReady.then(() => {
+                    // Si la largeur a changé, on relance avec la bonne mesure.
+                    runTypewriter();
+                }).catch(() => { });
+            }
+
+            // 3) Mobile: relance au resize/orientation change (viewport et rendu typographique changent).
+            let resizeT = 0;
+            const onResize = () => {
+                window.clearTimeout(resizeT);
+                resizeT = window.setTimeout(runTypewriter, 120);
+            };
+            window.addEventListener("resize", onResize, { passive: true });
         })();
     </script>
 
